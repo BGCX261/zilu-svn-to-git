@@ -1,0 +1,4 @@
+
+<%
+	//pageContext.getResponse().getContextPath();
+%>

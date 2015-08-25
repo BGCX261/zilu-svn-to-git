@@ -1,0 +1,74 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE struts PUBLIC
+"-//Apache Software Foundation//DTD Struts Configuration 2.1.7//EN"
+"http://struts.apache.org/dtds/struts-2.1.7.dtd">
+
+<struts>
+	<constant name="struts.convention.classes.reload" value="false" /><!--正式环境要去除 -->
+	<constant name="struts.devMode" value="false" /><!--正式环境要去除 -->
+	<constant name="struts.i18n.reload" value="false" /><!--正式环境要去除 -->
+	<constant name="struts.configuration.xml.reload" value="false" /><!--正式环境要去除 -->
+	<constant name="struts.enable.DynamicMethodInvocation" value="false" />
+	<constant name="struts.multipart.maxSize" value="8092000" /><!--commons-fileupload支持8M的图片 -->
+	<constant name="struts.ui.theme" value="simple" />
+	<constant name="struts.i18n.encoding" value="UTF-8" />
+	<constant name="struts.custom.i18n.resources" value="message" />
+	<constant name="struts.locale" value="zh-cn" />
+	<constant name="struts.ognl.allowStaticMethodAccess" value="true" />
+	<constant name="struts.action.extension" value="do" />
+
+	<package name="default" extends="struts-default">
+		<result-types>
+			<result-type name="face"
+				class="com.zilu.struts.FaceResult">
+			</result-type>
+		</result-types>
+
+		<interceptors>
+			<interceptor name="context"
+				class="com.zilu.struts.ContextInterceptor" />
+
+			<interceptor-stack name="actionStack">
+				<interceptor-ref name="context" />
+				<interceptor-ref name="checkbox" />
+				<interceptor-ref name="params" />
+				<interceptor-ref name="defaultStack" />
+				<interceptor-ref name="actionMappingParams" />
+			</interceptor-stack>
+		</interceptors>
+
+		<default-interceptor-ref name="actionStack" />
+
+		<global-results>
+			<result name="error">/WEB-INF/web/error.jsp</result>
+			<result name="page">/WEB-INF/web/${pageUrl}.jsp</result>
+			<result name="redirect" type="redirect">
+				${redirectUrl}
+			</result>
+			<result name="redirectAction" type="redirectAction">
+				${redirectAction}
+			</result>
+			<result name="chainAction" type="chain">
+				${chainAction}
+			</result>
+			<result name="redirectPost">
+				/WEB-INF/web/redirectPost.jsp
+			</result>
+			<result name="face" type="face"></result>
+		</global-results>
+
+	</package>
+	
+	<!-- web门户的相关配置 -->
+	<package name="portal" extends="default" namespace="/">
+		
+		<action name="*/*" class="{1}Action"  method="{2}">
+			<result name="success">/WEB-INF/web/{1}/{2}.jsp</result>
+		</action>
+		
+		<action name="*" class="{1}Action"  method="execute">
+			<result name="success">/WEB-INF/web/{1}/index.jsp</result>
+		</action>
+		
+	</package>
+</struts>
